@@ -1,0 +1,23 @@
+services:
+  ngx-oauth2:
+    build:
+      context: .
+    container_name: ngx-oauth2
+    image: ghcr.io/hyper-w/ngx-oauth2:latest
+    command: ["/ngx-oauth2_conf/ngx-oauth2.yml"] # yaml
+    volumes:
+      - type: bind
+        source: ./conf/ngx-oauth2.yml # yaml
+        target: /ngx-oauth2_conf/ngx-oauth2.yml # yaml
+        read_only: true
+      # - type: volume
+      #   source: ngx-oauth2-socket
+      #   target: /run
+
+# volumes:
+#   ngx-oauth2-socket:
+#     name: ngx-oauth2-socket
+#     driver: local
+#     driver_opts:
+#       type: tmpfs
+#       device: tmpfs

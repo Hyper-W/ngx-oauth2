@@ -1,0 +1,45 @@
+socket_type: "tcp"
+socket_path: "0.0.0.0:9200"
+cache_seconds: 300
+neg_cache_seconds: 5
+use_etag: true
+use_serialized_auth: false
+auth_realm: "TEST Authentication"
+path_header: "X-Authz-Path"
+
+oauth2:
+  introspection_endpoint: "https://auth.example.com/oauth2/introspect"
+  client_id: "example-client"
+  client_secret: "example-secret"
+  auth_method: "basic" # "basic" or "post"
+  skip_cert_verify: 0
+  root_ca_files: []
+  timeout: 2000
+
+authz:
+  path_pattern: "^/([^/]*)/"
+  ban_nomatch: false
+  nomatch_filter: ""
+  ban_default: true
+  default_filter: ""
+  path_filter:
+    api: "read"
+    admin: "admin"
+
+# response:
+#   ok:
+#     code: 200
+#     message: "Authorized"
+#   unauth:
+#     code: 401
+#     message: "Not authenticated"
+#   forbidden:
+#     code: 403
+#     message: "Forbidden"
+#   nopath:
+#     code: 400
+#     message: "No path header"
+
+logging:
+  enable_console: true
+  logging_level: "normal"

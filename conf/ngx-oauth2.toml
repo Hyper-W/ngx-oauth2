@@ -1,0 +1,50 @@
+socket_type = "unix"
+socket_path = "/run/ngx_oauth2.sock"
+cache_seconds = 300
+neg_cache_seconds = 5
+use_etag = true
+use_serialized_auth = false
+auth_realm = "TEST Authentication"
+path_header = "X-Authz-Path"
+
+[oauth2]
+introspection_endpoint = "https://auth.example.com/oauth2/introspect"
+client_id = "example-client"
+client_secret = "example-secret"
+auth_method = "basic"
+skip_cert_verify = 0
+root_ca_files = []
+timeout = 2000
+
+
+[authz]
+path_pattern = "^/([^/]*)/"
+ban_nomatch = false
+nomatch_filter = ""
+ban_default = true
+default_filter = ""
+
+[authz.path_filter]
+api = "read"
+admin = "admin"
+
+#[response.ok]
+#code=200
+#message="Authorized"
+
+#[response.unauth]
+#code=401
+#message="Not authenticated"
+
+#[response.forbidden]
+#code=403
+#message="Forbidden"
+
+#[response.nopath]
+#code=403
+#message="No path header"
+
+[logging]
+enable_console = true
+logfile = ""
+logging_level = "normal"

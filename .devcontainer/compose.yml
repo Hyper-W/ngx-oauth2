@@ -1,0 +1,17 @@
+services:
+  ngx-oauth2-dev:
+    build:
+      context: .
+      args:
+        - USER=${USER:-user} # Your User Name
+        - USER_ID=${USER_ID:-1000} # Your User ID
+        - GROUP_ID=${GROUP_ID:-1000} # Your GROUP ID
+        - ALPINE_VERSION_NAME=${ALPINE_VERSION_NAME:-latest} # alpine code name
+    image: ngx-oauth2-dev:alpine
+    container_name: ngx-oauth2-dev
+    volumes:
+      - type: bind
+        source: ../
+        target: /ngx-oauth2
+    tty: true
+    command: sh
