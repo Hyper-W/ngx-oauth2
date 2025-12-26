@@ -20,6 +20,7 @@ import (
 
 	"ngx-oauth2/htstat"
 
+	auth "ngx-oauth2/auth"
 	cfgloader "ngx-oauth2/config_loader"
 	logger "ngx-oauth2/logger"
 )
@@ -33,7 +34,7 @@ func warn(format string, v ...interface{}) {
 	fmt.Fprintf(os.Stderr, format+"\n", v...)
 }
 
-type NgxLdapPathAuthConfig struct {
+type NgxOauth2Config struct {
 	SocketType        string `json:"socket_type" yaml:"socket_type"`
 	SocketPath        string `json:"socket_path" yaml:"socket_path"`
 	CacheSeconds      uint32 `toml:",omitempty" json:"cache_seconds,omitempty" yaml:"cache_seconds,omitempty"`
@@ -127,7 +128,7 @@ func init() {
 	}
 	defer cfg_f.Close()
 
-	cfg := &NgxLdapPathAuthConfig{}
+	cfg := &NgxOauth2Config{}
 	if err := cfgloader.LoadConfig(cfg_f, flag.Arg(0), cfg); err != nil {
 		die("Config file parse error: %s", err)
 	}
@@ -191,6 +192,17 @@ func init() {
 		RootCaFiles:           cfg.Oauth2.RootCaFiles,
 		Timeout:               cfg.Oauth2.Timeout,
 	}
+
+	// provide config to auth package for introspection
+	auth.SetConfig(auth.Config{
+		IntrospectionEndpoint: cfg.Oauth2.IntrospectionEndpoint,
+		ClientId:              cfg.Oauth2.ClientId,
+		ClientSecret:          cfg.Oauth2.ClientSecret,
+		AuthMethod:            cfg.Oauth2.AuthMethod,
+		SkipCertVerify:        cfg.Oauth2.SkipCertVerify != 0,
+		RootCaFiles:           cfg.Oauth2.RootCaFiles,
+		Timeout:               cfg.Oauth2.Timeout,
+	})
 
 	PathPatternReg, err = regexp.Compile(cfg.Authz.PathPattern)
 	if err != nil {
